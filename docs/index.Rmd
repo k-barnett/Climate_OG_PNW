@@ -2,7 +2,9 @@
 title: "demo-git"
 author: "Kevin Barnett"
 date: "8/7/2023"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Background
 
-This is where I will provide the background on forest management history and the Pacific Northwest.
+Recruiting, restoring, and retaining old-growth forests throughout the country has been proposed as a climate change adaptation strategy and efforts to develop national forest management policies consistent with these goals are ongoing. While much of the initial science support has been geared towards developing methods to classify and inventory mature and old-growth forests, understanding the current distribution of older forests across climate gradients remains a key knowledge gap. Here, we evaluated multivariate climate gradients across stages of forest structural development and among the major forest type-groups found in the Pacific Northwest. Gridded climate data representing annual and seasonal patterns were reduced via principal components analysis into their first three major axes representing temperature, precipitation, and humidity/water deficit. These scores were extracted at forest plots managed by the Forest Inventory and Analysis (FIA) program. Each FIA plot was attributed with an old-growth structural index (OGSI) intended to represent the continuous nature of forest structural development in terms of the density of large live trees, diversity of live tree size classes, density of large snags, and cover of downed woody material. The OGSI values were used to classify FIA plots into “young”, “mature”, and “old-growth” stages consistent with protocols developed to monitor older forests across the study area. We tested for differences in the climate spaces occupied by these structural stages across major forest vegetation zones. We found old-growth to be distributed along significantly colder gradients relative to young forests for two wide-ranging, lower elevation forest type-groups (i.e., western hemlock, Sitka spruce). We also observed old-growth occupying relatively drier, but not colder, climate spaces in some forest type-groups (i.e., fir/spruce/mountain hemlock), and wetter, but not colder, areas in others (i.e., California mixed conifer). Our findings suggest that the current distributions of many older forest type-groups in the Pacific Northwest are climatically constrained and occupy a fraction of the observable conditions throughout their entire range. This bias is likely a legacy of past forest management practices where more productive and accessible sites were preferred. Recruiting future old-growth stands should consider diversifying these efforts across climatic domains as part of a broader climate change adaptation strategy.
 
 ```{r cars}
 summary(cars)
@@ -19,70 +21,11 @@ summary(cars)
 
 ## Methods
 
-Here we will have methods.
+Below is the distribution of forest vegetation zones within the study area. 
 
-#library(rFIA)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-options(dplyr.summarise.inform = FALSE)
-
-# Read in master data.frame
-appended_df <- read.csv("C:/Users/KBarnett/TWS/OldGrowthCampaign/FS_TechnicalTeam/appended_df.csv")
-
-# Read in PNW plots
-gnn_plots <- read.csv("C:/Users/KBarnett/TWS/OldGrowthCampaign/PNW_OGSI/gnn_pltcn_ogsi.csv")
-dim(gnn_plots)
-summary(gnn_plots)
-head(gnn_plots, 20)
-
-gnn_merge <- appended_df %>%
-  left_join(gnn_plots, by = "PLT_CN") %>%
-  mutate(ogsi_200 = ifelse(OGSI_200 == "True", 1, 0), 
-         ogsi_80 = ifelse(OGSI_80 == "True", 1, 0)) %>%
-  filter(!is.na(ogsi_200))
-dim(gnn_merge)
-
-# How many plots in each FIA forest type-group?
-table(gnn_merge$FORGROUP_NAME)
-
-############
-# Climate space analysis? 
-############
-library(terra)
-climate_folder <- "C:/Users/KBarnett/SpatialData/ClimateNA/Normal_1971_2000_bioclim/Normal_1971_2000/Normal_1971_2000_bioclim"
-list.files(climate_folder, pattern = "*.tif$", recursive = TRUE)
-
-climate_stack <- rast(paste(climate_folder, list.files(climate_folder, pattern = "*.tif$"), sep = "/"))
-names(climate_stack) <- c("AHM", "bFFP", "CMD", "CMI", "DD_0", "DD_18", "DD1040", "DD18", "DD5", "eFFP", "EMT", "Eref", "EXT", "FFP", "MAP", 
-                          "MAR", "MAT", "MCMT", "MSP", "MWMT", "NFFD", "PAS", "PPT_at", "PPT_sm", "PPT_sp", "PPT_wt", "RH", "SHM", "Tave_at", 
-                          "Tave_sm", "Tave_sp", "Tave_wt", "TD")
-
-# Remove the MAR (solar radiation, missing values and supposedly preliminary data)
-climate_stack_2 <- subset(climate_stack, "MAR", negate = TRUE)
-
-
-# Future climate data
-future_climate_folder <- "C:/Users/KBarnett/SpatialData/ClimateNA/ensemble_8GCMs_ssp585_2071_2100_bioclim/ensemble_8GCMs_ssp585_2071_2100/ensemble_8GCMs_ssp585_2071_2100_bioclim"
-future_climate_stack <- rast(paste(future_climate_folder, list.files(future_climate_folder, pattern = "*.tif$"), sep = "/"))
-names(future_climate_stack) <- names(climate_stack)
-
-future_climate_stack_2 <- subset(future_climate_stack, "MAR", negate = TRUE)
-
-# Place 100,000 random points within the extent of the NWFP 
-library(sf)
-nwfp_boundary <- st_read('C:/Users/KBarnett/Dropbox (TWS)/KBTBshared/NorthwestForestPlan/nwfpbnd/nwfp_esri.shp')
-plot(st_geometry(nwfp_boundary))
-
-set.seed(1234)  # Important for replication
-nwfp_points <- st_sample(nwfp_boundary, size = 250000)  # Increased from 100,000
-nwfp_proj <- st_transform(nwfp_points, crs = crs(climate_stack))
-nwfp_proj_vect <- vect(nwfp_proj)
-
-nwfp_climate_points <- extract(climate_stack_2, nwfp_proj_vect)
-summary(nwfp_climate_points)
-
-nwfp_climate_clean <- nwfp_climate_points[complete.cases(nwfp_climate_points),]
+```{r, image-ref-for-in-text, echo = FALSE, message=FALSE, fig.align='center', out.width = "75%", out.height = "75%"}
+knitr::include_graphics("vegzones.jpg")
+```
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
