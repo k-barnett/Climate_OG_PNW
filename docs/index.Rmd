@@ -178,13 +178,15 @@ We'll test whether the mean values of the first two PCA factors differ between y
 knitr::include_graphics("PC1_byFTG.jpg")
 ```
 
-You can see significant differences in the temperature gradient for several forest vegetation zones. We'll do the same for the second PCA factor. 
+You can see significant differences in the temperature gradient for several forest vegetation zones. Old-growth western hemlock, Sitka spruce, and Jeffrey pine are found along significantly colder gradients relative to younger forest, while old-growth Douglas-fir, Pacific silver fir, and grand fir/white fir are found along significantly warmer gradients relative to younger forest.
+
+We'll do the same for the second PCA factor. 
 
 ```{r pc2_by_ftg, echo = FALSE, fig.align = 'center', out.width = "100%", out.height = "100%"}
 knitr::include_graphics("PC2_byFTG.jpg")
 ```
 
-Again, similar but different patterns emerge. 
+Again, similar but different patterns emerge. Jeffrey pine/knobcone pine is only forest type where climate in old-growth plots are significantly drier relative to younger forest. Old-growth plots in grand fir/white fir, mountain hemlock, Pacific silver fir, Sitka spruce, and Douglas-fir are all significantly wetter relative to younger plots. 
 
 Finally, we'll compare the dissimilarity values between young and old-growth forests across forest vegetation zones. 
 
@@ -192,3 +194,6 @@ Finally, we'll compare the dissimilarity values between young and old-growth for
 knitr::include_graphics("dissimilarity_byFTG.jpg")
 ```
 
+Old-growth western hemlock and lodgepole pine are more dissimilar to future climates relative to younger forests. Younger Douglas-fir, Pacific silver fir, Port Orford cedar, mountain hemlock, and grand fir/white fir are all predicted to be more dissimilar to future climates relative to older forest. 
+
+Overall, these results reveal complex and different relationships between the climate spaces that younger and older forests occupy in the Pacific Northwest, USA, and how those relationships vary among the dominant forest vegetation zones in the region. Understanding whether the current reserve network implemented as part of the Northwest Forest Plan is more or less exposed to future climate change could yield important insights are planning is underway to update the regional ecosystem management framework that guides decision-making on the National Forests.
